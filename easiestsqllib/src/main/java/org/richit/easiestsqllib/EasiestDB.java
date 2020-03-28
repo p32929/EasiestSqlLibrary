@@ -17,6 +17,18 @@ public class EasiestDB extends SQLiteOpenHelper {
     private SQLiteDatabase writableDatabase;
     private ContentValues contentValues;
 
+    // Update data
+    public boolean updateData(int tableIndex, Datum... data) {
+        for (int i = 0; i < data.length; i++) {
+            if (data[i].getColumnName().isEmpty()) {
+                contentValues.put(tableArrayList.get(tableIndex).getColumns()[i].getColumnName(), data[i].getValue());
+            } else {
+                contentValues.put(data[i].getColumnName(), data[i].getValue());
+            }
+        }
+        return true;
+    }
+
     // Search in multiple columns
     public Cursor searchValuesInMultipleColumns(int tableIndex, Datum... data) {
         String query = "";
