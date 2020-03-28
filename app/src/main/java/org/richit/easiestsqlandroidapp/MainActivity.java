@@ -1,15 +1,17 @@
 package org.richit.easiestsqlandroidapp;
 
+import android.database.Cursor;
 import android.os.Bundle;
-import android.widget.Toast;
+import android.util.Log;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import org.richit.easiestsqllib.Column;
-import org.richit.easiestsqllib.Datum;
 import org.richit.easiestsqllib.EasiestDB;
 
 public class MainActivity extends AppCompatActivity {
+
+    private String TAG = this.getClass().getSimpleName();
 
     EasiestDB easiestDB;
 
@@ -29,20 +31,34 @@ public class MainActivity extends AppCompatActivity {
                 )
                 .doneAddingTables();
 
+// Add
+//        boolean done = easiestDB.addDataInTable(0,
+//                new Datum(1, "a"),
+//                new Datum(2, "b")
+//        );
+//
+//        Toast.makeText(this, "" + done, Toast.LENGTH_SHORT).show();
+//
+//        boolean done2 = easiestDB.addDataInTable(1,
+//                new Datum(1, "a"),
+//                new Datum(2, "b")
+//        );
+//
+//        Toast.makeText(this, "" + done2, Toast.LENGTH_SHORT).show();
 
-        boolean done = easiestDB.addDataInTable(0,
-                new Datum(1, "a"),
-                new Datum(2, "b")
-        );
 
-        Toast.makeText(this, "" + done, Toast.LENGTH_SHORT).show();
+//        Get
+//        Cursor cursor = easiestDB.getAllDataFrom(0);
+//        String data = "";
+//        if (cursor != null) {
+//            while (cursor.moveToNext()) {
+//                data += cursor.getString(0) + " " + cursor.getString(1) + " " + cursor.getString(2) + "\n";
+//            }
+//        }
+//
+//        Log.d(TAG, "onCreate: " + data);
 
-        boolean done2 = easiestDB.addDataInTable(1,
-                new Datum(1, "a"),
-                new Datum(2, "b")
-        );
 
-        Toast.makeText(this, "" + done2, Toast.LENGTH_SHORT).show();
 
     }
 }

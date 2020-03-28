@@ -2,6 +2,7 @@ package org.richit.easiestsqllib;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.DatabaseErrorHandler;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
@@ -16,7 +17,32 @@ public class EasiestDB extends SQLiteOpenHelper {
     private SQLiteDatabase writableDatabase;
     private ContentValues contentValues;
 
-    //
+    // Get data
+    public Cursor getAllDataFrom(int tableNumber) {
+        Cursor res = writableDatabase.rawQuery("select * from " + tableArrayList.get(tableNumber).getTableName(), null);
+        return res;
+    }
+
+    public Cursor getAllDataFrom(String tableName) {
+        Cursor res = writableDatabase.rawQuery("select * from " + tableName, null);
+        return res;
+    }
+
+    public Cursor getAllDataOrderedBy(int columnNumber, boolean ascending, int tableNumber) {
+        String postfix = ascending ? "" : " DESC ";
+        String colNam = columnNumber == 0 ? " ID " : tableArrayList.get(tableNumber).getColumns()[columnNumber - 1].getColumnName();
+        Cursor res = writableDatabase.rawQuery("select * from " + tableArrayList.get(tableNumber).getTableName() + " ORDER BY " + colNam + postfix, null);
+        return res;
+    }
+
+    public Cursor getAllDataOrderedBy(int columnNumber, boolean ascending, String tableName) {
+        String postfix = ascending ? "" : " DESC ";
+        String colNam = columnNumber == 0 ? " ID " : getColumnNameFromTable(tableName, columnNumber);
+        Cursor res = writableDatabase.rawQuery("select * from " + tableName + " ORDER BY " + colNam + postfix, null);
+        return res;
+    }
+
+    // Add Data
     public boolean addDataInTable(int tableNumber, Datum... data) {
         contentValues = new ContentValues();
         for (int i = 0; i < data.length; i++) {
@@ -67,7 +93,7 @@ public class EasiestDB extends SQLiteOpenHelper {
         return tableArrayList.get(index).getColumns()[columnNumber - 1].getColumnName();
     }
 
-    //
+    // Add Table
     public EasiestDB addTableColumns(String tableName, Column... columns) {
 
         Table table = new Table(
@@ -94,7 +120,7 @@ public class EasiestDB extends SQLiteOpenHelper {
         return this;
     }
 
-    //
+    // Init
     public static EasiestDB init(Context context) {
         return new EasiestDB(context, DATABASE_NAME, null, 1);
     }
@@ -127,7 +153,7 @@ public class EasiestDB extends SQLiteOpenHelper {
         return new EasiestDB(context, DATABASE_NAME, factory, version, errorHandler);
     }
 
-    //
+    // Stock
     private Context context;
     private SQLiteDatabase.CursorFactory factory;
     private int version;
