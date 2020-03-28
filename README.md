@@ -2,8 +2,21 @@
 The Easiest and Laziest approach to Android SQL Database.
 
 ## Installation
+Add it in your root build.gradle at the end of repositories:
+```
+allprojects {
+  repositories {
+    maven { url 'https://jitpack.io' }
+  }
+}
+```
 
-
+Add the dependency
+```
+dependencies {
+     implementation 'com.github.p32929:EasiestSqlLibrary:1.0.0.1'
+}
+```
 
 ## Basic Usage
 Steps to follow:
