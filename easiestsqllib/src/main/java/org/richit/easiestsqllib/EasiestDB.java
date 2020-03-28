@@ -17,8 +17,19 @@ public class EasiestDB extends SQLiteOpenHelper {
     private SQLiteDatabase writableDatabase;
     private ContentValues contentValues;
 
+    // Delete data
+    public boolean deleteRow(int tableIndex, int rowIndex) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        return db.delete(tableArrayList.get(tableIndex).getTableName(), "id = ?", new String[]{String.valueOf(rowIndex)}) == 1;
+    }
+
+    public boolean deleteRowIfValuesMatchIn(int tableIndex, Datum data) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        return db.delete(tableArrayList.get(tableIndex).getTableName(), data.getColumnName() + " = ?", new String[]{String.valueOf(data.getValue())}) == 1;
+    }
+
     // Update data
-    public boolean updateData(int tableIndex, Datum... data) {
+    public boolean updateData(int tableIndex, int rowIndex, Datum... data) {
         for (int i = 0; i < data.length; i++) {
             if (data[i].getColumnName().isEmpty()) {
                 contentValues.put(tableArrayList.get(tableIndex).getColumns()[i].getColumnName(), data[i].getValue());
@@ -26,7 +37,11 @@ public class EasiestDB extends SQLiteOpenHelper {
                 contentValues.put(data[i].getColumnName(), data[i].getValue());
             }
         }
-        return true;
+        try {
+            return writableDatabase.update(tableArrayList.get(tableIndex).getTableName(), contentValues, "id = ?", new String[]{String.valueOf(rowIndex)}) > 0;
+        } catch (Exception e) {
+            return false;
+        }
     }
 
     // Search in multiple columns
