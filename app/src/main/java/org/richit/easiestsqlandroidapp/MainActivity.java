@@ -24,12 +24,12 @@ public class MainActivity extends AppCompatActivity {
 
         easiestDB = EasiestDB.init(this)
                 .addTableColumns("table 1",
-                        new Column("Ca1", "text"),
-                        new Column("Ca2", "text")
+                        new Column("Column a1", "text"),
+                        new Column("Column a2", "text")
                 )
                 .addTableColumns("table 2",
-                        new Column("Cb1", "text"),
-                        new Column("Cb2", "text", "unique")
+                        new Column("Column b1", "text"),
+                        new Column("Column b2", "text", "unique")
                 )
                 .doneAddingTables();
 

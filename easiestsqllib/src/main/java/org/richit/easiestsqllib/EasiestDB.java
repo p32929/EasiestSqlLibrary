@@ -88,7 +88,7 @@ public class EasiestDB extends SQLiteOpenHelper {
     }
 
     public Cursor getOneRowData(String tableName, int rowID) {
-        Cursor cursor = writableDatabase.query(tableName,
+        Cursor cursor = writableDatabase.query(tableName.replace(" ", ""),
                 getAllColumnsFromTable(tableName), "ID=?",
                 new String[]{String.valueOf(rowID)},
                 null, null, null, "1");
@@ -155,7 +155,7 @@ public class EasiestDB extends SQLiteOpenHelper {
     public EasiestDB addTableColumns(String tableName, Column... columns) {
 
         Table table = new Table(
-                tableName.replace(" ", ""),
+                tableName.replace(" ", "_"),
                 columns
         );
 

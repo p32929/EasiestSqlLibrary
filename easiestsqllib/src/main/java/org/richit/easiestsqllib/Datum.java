@@ -5,7 +5,7 @@ public class Datum {
     private int columnNumber;
 
     public Datum(String columnName, String value) {
-        this.columnName = columnName.toUpperCase();
+        this.columnName = columnName.replace(" ", "_").toUpperCase();
         this.value = value;
     }
 
