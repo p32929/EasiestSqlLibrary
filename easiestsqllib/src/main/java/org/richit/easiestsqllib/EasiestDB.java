@@ -18,8 +18,8 @@ public class EasiestDB extends SQLiteOpenHelper {
     private ContentValues contentValues;
 
     // Get data
-    public Cursor getAllDataFrom(int tableNumber) {
-        Cursor res = writableDatabase.rawQuery("select * from " + tableArrayList.get(tableNumber).getTableName(), null);
+    public Cursor getAllDataFrom(int tableIndex) {
+        Cursor res = writableDatabase.rawQuery("select * from " + tableArrayList.get(tableIndex).getTableName(), null);
         return res;
     }
 
@@ -28,10 +28,10 @@ public class EasiestDB extends SQLiteOpenHelper {
         return res;
     }
 
-    public Cursor getAllDataOrderedBy(int columnNumber, boolean ascending, int tableNumber) {
+    public Cursor getAllDataOrderedBy(int columnNumber, boolean ascending, int tableIndex) {
         String postfix = ascending ? "" : " DESC ";
-        String colNam = columnNumber == 0 ? " ID " : tableArrayList.get(tableNumber).getColumns()[columnNumber - 1].getColumnName();
-        Cursor res = writableDatabase.rawQuery("select * from " + tableArrayList.get(tableNumber).getTableName() + " ORDER BY " + colNam + postfix, null);
+        String colNam = columnNumber == 0 ? " ID " : tableArrayList.get(tableIndex).getColumns()[columnNumber - 1].getColumnName();
+        Cursor res = writableDatabase.rawQuery("select * from " + tableArrayList.get(tableIndex).getTableName() + " ORDER BY " + colNam + postfix, null);
         return res;
     }
 
@@ -42,17 +42,75 @@ public class EasiestDB extends SQLiteOpenHelper {
         return res;
     }
 
+    private String[] getAllColumnsFromTable(int tableIndex) {
+        Column[] columns = tableArrayList.get(tableIndex).getColumns();
+        String allColumnNames[] = new String[columns.length + 1];
+        allColumnNames[0] = "ID";
+        for (int i = 0; i < columns.length; i++) {
+            allColumnNames[i + 1] = columns[i].getColumnName();
+        }
+
+        return allColumnNames;
+    }
+
+    private String[] getAllColumnsFromTable(String tableName) {
+        int tableIndex = -1;
+
+        for (int i = 0; i < tableArrayList.size(); i++) {
+            if (tableName.toUpperCase().equals(tableArrayList.get(i).getTableName())) {
+                tableIndex = i;
+                break;
+            }
+        }
+
+        Column[] columns = tableArrayList.get(tableIndex).getColumns();
+        String allColumnNames[] = new String[columns.length + 1];
+        allColumnNames[0] = "ID";
+        for (int i = 0; i < columns.length; i++) {
+            allColumnNames[i + 1] = columns[i].getColumnName();
+        }
+
+        return allColumnNames;
+    }
+
+
+    public Cursor getOneRowData(int tableIndex, int rowNumber) {
+        Cursor cursor = writableDatabase.query(tableArrayList.get(tableIndex).getTableName(),
+                getAllColumnsFromTable(tableIndex), "ID=?",
+                new String[]{String.valueOf(rowNumber)},
+                null, null, null, "1");
+
+        if (cursor.getCount() > 0) {
+            return cursor;
+        } else {
+            return null;
+        }
+    }
+
+    public Cursor getOneRowData(String tableName, int rowID) {
+        Cursor cursor = writableDatabase.query(tableName,
+                getAllColumnsFromTable(tableName), "ID=?",
+                new String[]{String.valueOf(rowID)},
+                null, null, null, "1");
+
+        if (cursor.getCount() > 0) {
+            return cursor;
+        } else {
+            return null;
+        }
+    }
+
     // Add Data
-    public boolean addDataInTable(int tableNumber, Datum... data) {
+    public boolean addDataInTable(int tableIndex, Datum... data) {
         contentValues = new ContentValues();
         for (int i = 0; i < data.length; i++) {
             if (data[i].getColumnName().isEmpty()) {
-                contentValues.put(getColumnNameFromTable(tableNumber, data[i].getColumnNumber()), data[i].getValue());
+                contentValues.put(getColumnNameFromTable(tableIndex, data[i].getColumnNumber()), data[i].getValue());
             } else {
                 contentValues.put(data[i].getColumnName(), data[i].getValue());
             }
         }
-        long result = writableDatabase.insert(tableArrayList.get(tableNumber).getTableName(), null, contentValues);
+        long result = writableDatabase.insert(tableArrayList.get(tableIndex).getTableName(), null, contentValues);
 
         if (result == -1)
             return false;
@@ -77,14 +135,14 @@ public class EasiestDB extends SQLiteOpenHelper {
             return true;
     }
 
-    private String getColumnNameFromTable(int tableNumber, int columnNumber) {
-        return tableArrayList.get(tableNumber).getColumns()[columnNumber - 1].getColumnName();
+    private String getColumnNameFromTable(int tableIndex, int columnNumber) {
+        return tableArrayList.get(tableIndex).getColumns()[columnNumber - 1].getColumnName();
     }
 
     private String getColumnNameFromTable(String tableName, int columnNumber) {
         int index = -1;
         for (int i = 0; i < tableArrayList.size(); i++) {
-            if (tableArrayList.get(i).getTableName().toUpperCase().equals(tableName.toUpperCase())) {
+            if (tableName.toUpperCase().equals(tableArrayList.get(i).getTableName())) {
                 index = i;
                 break;
             }
@@ -97,7 +155,7 @@ public class EasiestDB extends SQLiteOpenHelper {
     public EasiestDB addTableColumns(String tableName, Column... columns) {
 
         Table table = new Table(
-                tableName.replace(" ", "").toUpperCase(),
+                tableName.replace(" ", ""),
                 columns
         );
 

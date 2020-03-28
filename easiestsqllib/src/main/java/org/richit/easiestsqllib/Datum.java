@@ -5,17 +5,17 @@ public class Datum {
     private int columnNumber;
 
     public Datum(String columnName, String value) {
-        this.columnName = columnName;
+        this.columnName = columnName.toUpperCase();
         this.value = value;
     }
 
     public Datum(String columnName, int value) {
-        this.columnName = columnName;
+        this.columnName = columnName.toUpperCase();
         this.value = String.valueOf(value);
     }
 
     public Datum(String columnName, double value) {
-        this.columnName = columnName;
+        this.columnName = columnName.toUpperCase();
         this.value = String.valueOf(value);
     }
 

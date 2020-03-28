@@ -43,9 +43,9 @@ public class Column {
             if (!columnDataTypes[i].endsWith(" ")) {
                 columnDataTypes[i] = columnDataTypes[i] + " ";
             }
-            finalDatatype += columnDataTypes[i].toUpperCase();
+            finalDatatype += columnDataTypes[i];
         }
-        this.columnDataType = finalDatatype;
+        this.columnDataType = finalDatatype.toUpperCase();
     }
 
     public String getColumnName() {

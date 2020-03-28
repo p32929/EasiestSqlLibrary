@@ -6,7 +6,7 @@ public class Table {
     private String sql = "";
 
     public Table(String tableName, Column... columns) {
-        this.tableName = tableName;
+        this.tableName = tableName.toUpperCase();
         this.columns = columns;
     }
 
