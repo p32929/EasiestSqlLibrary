@@ -10,12 +10,49 @@ import android.database.sqlite.SQLiteOpenHelper;
 import java.util.ArrayList;
 
 public class EasiestDB extends SQLiteOpenHelper {
-
+    // Start from the bottom for better understanding
     private static String DATABASE_NAME = "DEMO_DATABASE.db";
     private ArrayList<Table> tableArrayList = new ArrayList<>();
 
     private SQLiteDatabase writableDatabase;
     private ContentValues contentValues;
+
+    // Search
+    public Cursor searchInColumn(int columnNumber, String valueToSearch, int limit, int tableNumber) {
+        String allColNames[] = new String[tableArrayList.get(tableNumber).getColumns().length + 1];
+        allColNames[0] = "ID";
+        for (int i = 0; i < tableArrayList.get(tableNumber).getColumns().length; i++) {
+            allColNames[i + 1] = tableArrayList.get(tableNumber).getColumns()[i].getColumnName();
+        }
+        Cursor cursor = writableDatabase.query(tableArrayList.get(tableNumber).getTableName(),
+                allColNames, allColNames[columnNumber] + "=?",
+                new String[]{valueToSearch},
+                null, null, null, limit == -1 ? null : String.valueOf(limit));
+
+        if (cursor.getCount() > 0) {
+            return cursor;
+        } else {
+            return null;
+        }
+    }
+
+    public Cursor searchInColumn(String columnName, String valueToSearch, int limit, int tableNumber) {
+        String allColNames[] = new String[tableArrayList.get(tableNumber).getColumns().length + 1];
+        allColNames[0] = "ID";
+        for (int i = 0; i < tableArrayList.get(tableNumber).getColumns().length; i++) {
+            allColNames[i + 1] = tableArrayList.get(tableNumber).getColumns()[i].getColumnName();
+        }
+        Cursor cursor = writableDatabase.query(tableArrayList.get(tableNumber).getTableName(),
+                allColNames, " " + columnName + " " + "=?",
+                new String[]{valueToSearch},
+                null, null, null, limit == -1 ? null : String.valueOf(limit));
+
+        if (cursor.getCount() > 0) {
+            return cursor;
+        } else {
+            return null;
+        }
+    }
 
     // Get data
     public Cursor getAllDataFrom(int tableIndex) {
@@ -74,10 +111,10 @@ public class EasiestDB extends SQLiteOpenHelper {
     }
 
 
-    public Cursor getOneRowData(int tableIndex, int rowNumber) {
+    public Cursor getOneRowData(int tableIndex, int rowIndex) {
         Cursor cursor = writableDatabase.query(tableArrayList.get(tableIndex).getTableName(),
                 getAllColumnsFromTable(tableIndex), "ID=?",
-                new String[]{String.valueOf(rowNumber)},
+                new String[]{String.valueOf(rowIndex)},
                 null, null, null, "1");
 
         if (cursor.getCount() > 0) {
