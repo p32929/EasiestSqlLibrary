@@ -1,10 +1,12 @@
 package org.richit.easiestsqlandroidapp;
 
 import android.os.Bundle;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import org.richit.easiestsqllib.Column;
+import org.richit.easiestsqllib.Datum;
 import org.richit.easiestsqllib.EasiestDB;
 
 public class MainActivity extends AppCompatActivity {
@@ -26,6 +28,14 @@ public class MainActivity extends AppCompatActivity {
                         new Column("Cb2", "text", "unique")
                 )
                 .doneAddingTables();
+
+
+        boolean done = easiestDB.addDataInTable(0,
+                new Datum(1, "a"),
+                new Datum(2, "b")
+        );
+
+        Toast.makeText(this, "" + done, Toast.LENGTH_SHORT).show();
 
     }
 }

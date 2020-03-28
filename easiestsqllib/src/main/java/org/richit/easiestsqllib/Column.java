@@ -31,10 +31,10 @@ SOFTWARE.
 public class Column {
 
     //
-    String columnName, columnDataType;
+    private String columnName = "", columnDataType = "";
 
-    public Column (String columnName, String... columnDataTypes) {
-        this.columnName = columnName.replaceAll(" ", "_");
+    public Column(String columnName, String... columnDataTypes) {
+        this.columnName = columnName.replaceAll(" ", "_").toUpperCase();
         String finalDatatype = "";
         for (int i = 0; i < columnDataTypes.length; i++) {
             if (!columnDataTypes[i].startsWith(" ")) {
@@ -46,5 +46,21 @@ public class Column {
             finalDatatype += columnDataTypes[i].toUpperCase();
         }
         this.columnDataType = finalDatatype;
+    }
+
+    public String getColumnName() {
+        return columnName;
+    }
+
+    public void setColumnName(String columnName) {
+        this.columnName = columnName;
+    }
+
+    public String getColumnDataType() {
+        return columnDataType;
+    }
+
+    public void setColumnDataType(String columnDataType) {
+        this.columnDataType = columnDataType;
     }
 }
