@@ -37,5 +37,12 @@ public class MainActivity extends AppCompatActivity {
 
         Toast.makeText(this, "" + done, Toast.LENGTH_SHORT).show();
 
+        boolean done2 = easiestDB.addDataInTable(1,
+                new Datum(1, "a"),
+                new Datum(2, "b")
+        );
+
+        Toast.makeText(this, "" + done2, Toast.LENGTH_SHORT).show();
+
     }
 }
