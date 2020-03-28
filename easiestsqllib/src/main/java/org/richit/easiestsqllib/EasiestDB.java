@@ -12,13 +12,37 @@ import java.util.ArrayList;
 public class EasiestDB extends SQLiteOpenHelper {
     // Start from the bottom for better understanding
     private static String DATABASE_NAME = "DEMO_DATABASE.db";
-    private ArrayList<Table> tableArrayList = new ArrayList<>();
+    public ArrayList<Table> tableArrayList = new ArrayList<>();
 
     private SQLiteDatabase writableDatabase;
     private ContentValues contentValues;
 
+    // Search in multiple columns
+    public Cursor searchValuesInMultipleColumns(int tableIndex, Datum... data) {
+        String query = "";
+        for (int i = 0; i < data.length; i++) {
+            query += data[i].getColumnName() + " = ? ";
+            if (i != data.length - 1) {
+                query += " AND ";
+            }
+        }
+        String[] columnsToMatch = new String[data.length];
+        String[] valuesToMatch = new String[data.length];
+
+        for (int i = 0; i < data.length; i++) {
+            if (data[i].getColumnName().isEmpty()) {
+                columnsToMatch[i] = tableArrayList.get(tableIndex).getColumns()[data[i].getColumnNumber()].getColumnName();
+            } else {
+                columnsToMatch[i] = data[i].getColumnName();
+            }
+            valuesToMatch[i] = data[i].getValue();
+        }
+
+        return writableDatabase.query(tableArrayList.get(tableIndex).getTableName(), columnsToMatch, query, valuesToMatch, null, null, null);
+    }
+
     // Search
-    public Cursor searchInColumn(int columnNumber, String valueToSearch, int limit, int tableNumber) {
+    public Cursor searchInOneColumn(int columnNumber, String valueToSearch, int limit, int tableNumber) {
         String allColNames[] = new String[tableArrayList.get(tableNumber).getColumns().length + 1];
         allColNames[0] = "ID";
         for (int i = 0; i < tableArrayList.get(tableNumber).getColumns().length; i++) {
@@ -36,7 +60,7 @@ public class EasiestDB extends SQLiteOpenHelper {
         }
     }
 
-    public Cursor searchInColumn(String columnName, String valueToSearch, int limit, int tableNumber) {
+    public Cursor searchInOneColumn(String columnName, String valueToSearch, int limit, int tableNumber) {
         String allColNames[] = new String[tableArrayList.get(tableNumber).getColumns().length + 1];
         allColNames[0] = "ID";
         for (int i = 0; i < tableArrayList.get(tableNumber).getColumns().length; i++) {
@@ -72,12 +96,7 @@ public class EasiestDB extends SQLiteOpenHelper {
         return res;
     }
 
-    public Cursor getAllDataOrderedBy(int columnNumber, boolean ascending, String tableName) {
-        String postfix = ascending ? "" : " DESC ";
-        String colNam = columnNumber == 0 ? " ID " : getColumnNameFromTable(tableName, columnNumber);
-        Cursor res = writableDatabase.rawQuery("select * from " + tableName + " ORDER BY " + colNam + postfix, null);
-        return res;
-    }
+// #1
 
     private String[] getAllColumnsFromTable(int tableIndex) {
         Column[] columns = tableArrayList.get(tableIndex).getColumns();
@@ -142,7 +161,7 @@ public class EasiestDB extends SQLiteOpenHelper {
         contentValues = new ContentValues();
         for (int i = 0; i < data.length; i++) {
             if (data[i].getColumnName().isEmpty()) {
-                contentValues.put(getColumnNameFromTable(tableIndex, data[i].getColumnNumber()), data[i].getValue());
+                contentValues.put(getColumnNameFromTableAndColumnNumber(tableIndex, data[i].getColumnNumber()), data[i].getValue());
             } else {
                 contentValues.put(data[i].getColumnName(), data[i].getValue());
             }
@@ -155,38 +174,14 @@ public class EasiestDB extends SQLiteOpenHelper {
             return true;
     }
 
-    public boolean addDataInTable(String tableName, Datum... data) {
-        contentValues = new ContentValues();
-        for (int i = 0; i < data.length; i++) {
-            if (data[i].getColumnName().isEmpty()) {
-                contentValues.put(getColumnNameFromTable(tableName, data[i].getColumnNumber()), data[i].getValue());
-            } else {
-                contentValues.put(data[i].getColumnName(), data[i].getValue());
-            }
-        }
-        long result = writableDatabase.insert(tableName, null, contentValues);
+// #2
 
-        if (result == -1)
-            return false;
-        else
-            return true;
-    }
-
-    private String getColumnNameFromTable(int tableIndex, int columnNumber) {
+    //
+    private String getColumnNameFromTableAndColumnNumber(int tableIndex, int columnNumber) {
         return tableArrayList.get(tableIndex).getColumns()[columnNumber - 1].getColumnName();
     }
 
-    private String getColumnNameFromTable(String tableName, int columnNumber) {
-        int index = -1;
-        for (int i = 0; i < tableArrayList.size(); i++) {
-            if (tableName.toUpperCase().equals(tableArrayList.get(i).getTableName())) {
-                index = i;
-                break;
-            }
-        }
-
-        return tableArrayList.get(index).getColumns()[columnNumber - 1].getColumnName();
-    }
+// #3
 
     // Add Table
     public EasiestDB addTableColumns(String tableName, Column... columns) {
@@ -292,3 +287,45 @@ public class EasiestDB extends SQLiteOpenHelper {
         onCreate(db);
     }
 }
+
+
+// #1
+//    public Cursor getAllDataOrderedBy(int columnNumber, boolean ascending, String tableName) {
+//        String postfix = ascending ? "" : " DESC ";
+//        String colNam = columnNumber == 0 ? " ID " : getColumnNameFromTableAndColumnNumber(tableName, columnNumber);
+//        Cursor res = writableDatabase.rawQuery("select * from " + tableName + " ORDER BY " + colNam + postfix, null);
+//        return res;
+//    }
+
+// #2
+//    public boolean addDataInTable(String tableName, Datum... data) {
+//        contentValues = new ContentValues();
+//        for (int i = 0; i < data.length; i++) {
+//            if (data[i].getColumnName().isEmpty()) {
+//                contentValues.put(getColumnNameFromTableAndColumnNumber(tableName, data[i].getColumnNumber()), data[i].getValue());
+//            } else {
+//                contentValues.put(data[i].getColumnName(), data[i].getValue());
+//            }
+//        }
+//        long result = writableDatabase.insert(tableName, null, contentValues);
+//
+//        if (result == -1)
+//            return false;
+//        else
+//            return true;
+//    }
+
+// #3
+//    private String getColumnNameFromTableAndColumnNumber(String tableName, int columnNumber) {
+//        int index = -1;
+//        for (int i = 0; i < tableArrayList.size(); i++) {
+//            if (tableName.toUpperCase().equals(tableArrayList.get(i).getTableName())) {
+//                index = i;
+//                break;
+//            }
+//        }
+//
+//        return tableArrayList.get(index).getColumns()[columnNumber - 1].getColumnName();
+//    }
+
+// #4
