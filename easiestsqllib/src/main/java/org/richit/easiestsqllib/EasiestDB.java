@@ -17,6 +17,21 @@ public class EasiestDB extends SQLiteOpenHelper {
     private SQLiteDatabase writableDatabase;
     private ContentValues contentValues;
 
+    // Delete more
+    public void deleteDatabase() {
+        context.deleteDatabase(DATABASE_NAME);
+    }
+
+    public void deleteAllDataFrom(String tableName) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.execSQL("delete from " + tableName);
+    }
+
+    public void deleteAllDataFrom(int tableIndex) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.execSQL("delete from " + tableIndex);
+    }
+
     // Delete data
     public boolean deleteRow(int tableIndex, int rowIndex) {
         SQLiteDatabase db = this.getWritableDatabase();
