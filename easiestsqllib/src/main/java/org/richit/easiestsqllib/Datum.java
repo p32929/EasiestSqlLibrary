@@ -26,7 +26,7 @@ SOFTWARE.
 
 public class Datum {
     private String columnName = "", value = "";
-    private int columnNumber;
+    private int columnIndex;
 
     public Datum(String columnName, String value) {
         this.columnName = columnName.replace(" ", "_").toUpperCase();
@@ -43,18 +43,18 @@ public class Datum {
         this.value = String.valueOf(value);
     }
 
-    public Datum(int columnNumber, String value) {
-        this.columnNumber = columnNumber;
+    public Datum(int columnIndex, String value) {
+        this.columnIndex = columnIndex;
         this.value = value;
     }
 
-    public Datum(int columnNumber, int value) {
-        this.columnNumber = columnNumber;
+    public Datum(int columnIndex, int value) {
+        this.columnIndex = columnIndex;
         this.value = String.valueOf(value);
     }
 
-    public Datum(int columnNumber, double value) {
-        this.columnNumber = columnNumber;
+    public Datum(int columnIndex, double value) {
+        this.columnIndex = columnIndex;
         this.value = String.valueOf(value);
     }
 
@@ -74,11 +74,11 @@ public class Datum {
         this.value = value;
     }
 
-    public int getColumnNumber() {
-        return columnNumber;
+    public int getColumnIndex() {
+        return columnIndex;
     }
 
-    public void setColumnNumber(int columnNumber) {
-        this.columnNumber = columnNumber;
+    public void setColumnIndex(int columnIndex) {
+        this.columnIndex = columnIndex;
     }
 }
