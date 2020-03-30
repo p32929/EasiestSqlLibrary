@@ -173,6 +173,8 @@ boolean deleted = easiestDB.deleteDatabase();
 
 I hope, you will enjoy using the library. Feel free to contribute codes.
 
+If you want to use the previous version of this library, you can still use that from here: https://github.com/p32929/AndroidEasySQL-Library
+
 #### License
 
 ```
