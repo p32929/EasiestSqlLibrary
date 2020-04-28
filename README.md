@@ -95,7 +95,7 @@ if (cursor != null) {
 ###### easiestDB.getOneRowData(String tableName, int rowNumber)
 
 ```
-Cursor cursor = easiestDB.getOneRowData(0, 0);
+Cursor cursor = easiestDB.getOneRowData(0, 1); // rowNumber starts from 1 but tableIndex starts from 0
 if (cursor != null) {
     cursor.moveToFirst();
     int value1 = cursor.getInt(columnIndex);
