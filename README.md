@@ -1,5 +1,5 @@
 # EasiestSqlLibrary
-The Easiest and Laziest approach to Android SQL Database.
+The Easiest and the Laziest approach to Android SQL Database. If you like Flutter, the flutter version of this library can be found here -> [Github](https://github.com/p32929/EasiestSqlFlutter) or [pub.dev](https://pub.dev/packages/easiestdb) 
 
 ## Installation
 Add it in your root build.gradle at the end of repositories:
