@@ -14,7 +14,7 @@ allprojects {
 Add the dependency
 ```
 dependencies {
-     implementation 'com.github.p32929:EasiestSqlLibrary:1.0.0.1'
+     implementation 'com.github.p32929:EasiestSqlLibrary:1.0.0.2'
 }
 ```
 

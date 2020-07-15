@@ -69,6 +69,7 @@ public class EasiestDB extends SQLiteOpenHelper {
 
     // Update data
     public boolean updateData(int tableIndex, int rowNumber, Datum... data) {
+        contentValues = new ContentValues();
         for (int i = 0; i < data.length; i++) {
             if (data[i].getColumnName().isEmpty()) {
                 contentValues.put(tableArrayList.get(tableIndex).getColumns()[i].getColumnName(), data[i].getValue());
@@ -251,7 +252,6 @@ public class EasiestDB extends SQLiteOpenHelper {
 
     // Add Table
     public EasiestDB addTableColumns(String tableName, Column... columns) {
-
         Table table = new Table(
                 tableName.replace(" ", "_"),
                 columns
