@@ -271,33 +271,6 @@ public class EasiestDB extends SQLiteOpenHelper {
         return this;
     }
 
-// #4⬇️⬇️⬇️
-
-public int addData(final int tableIndex, final Datum...data) {
-
-    this.contentValues = new ContentValues();
-
-    for (int i = 0; i < data.length; i++) {
-
-        if (data[i].getColumnName().isEmpty()) {
-
-            this.contentValues.put(this.getColumnNameFromTableAndcolumnIndex(tableIndex, data[i].getColumnIndex()), data[i].getValue());
-
-        } else {
-
-            this.contentValues.put(data[i].getColumnName(), data[i].getValue());
-        }
-    }
-
-    final long result = this.writableDatabase.insert(this.tableArrayList.get(tableIndex).getTableName(), (String) null, this.contentValues);
-
-    final Cursor cursor = this.writableDatabase.rawQuery("select * from " + this.tableArrayList.get(tableIndex).getTableName(), (String[]) null);
-    cursor.moveToLast();
-    return cursor.getInt(0);
-
-}
-
-//#4⬆️⬆️⬆️
     public EasiestDB doneAddingTables() {
         writableDatabase = getWritableDatabase();
         return this;
